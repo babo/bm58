@@ -135,7 +135,8 @@ def main():
             bytesize=serial.EIGHTBITS,
             timeout=0.5,
         )
-    except:
+    except serial.serialutil.SerialException as e:
+        print(e)
         print(lang["ErrorPort"] % args.device)
         sys.exit(1)
 
