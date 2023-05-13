@@ -22,7 +22,7 @@ import locale
 import sys
 
 import serial
-import MySQLdb
+import mysql.connector
 
 # Internationalize
 text_dic = {
@@ -38,6 +38,7 @@ text_dic = {
         "SettingsDelimiterDefault": ",",
         "SettingsGroupMYSQL": "MySQL database",
         "SettingsMYSQLHostHelp": "MySQL host",
+        "SettingsMYSQLPortHelp": "MySQL port",
         "SettingsMYSQLUserHelp": "MySQL username",
         "SettingsMYSQLPasswordHelp": "MySQL password",
         "SettingsMYSQLDBHelp": "MySQL db",
@@ -67,6 +68,7 @@ text_dic = {
         "SettingsDelimiterDefault": ";",
         "SettingsGroupMYSQL": "MySQL Datenbank",
         "SettingsMYSQLHostHelp": "MySQL Host",
+        "SettingsMYSQLPortHelp": "MySQL port",
         "SettingsMYSQLUserHelp": "MySQL Benutzer",
         "SettingsMYSQLPasswordHelp": "MySQL Passwort",
         "SettingsMYSQLDBHelp": "MySQL Datenbankname",
@@ -116,6 +118,7 @@ def main():
 
     mysqlargs = parser.add_argument_group(lang["SettingsGroupMYSQL"])
     mysqlargs.add_argument("-a", "--host", dest="host", help=lang["SettingsMYSQLHostHelp"], default="localhost")
+    mysqlargs.add_argument("-P", "--port", dest="port", help=lang["SettingsMYSQLPortHelp"], default="3306")
     mysqlargs.add_argument("-u", "--user", dest="user", help=lang["SettingsMYSQLUserHelp"], default="bm58")
     mysqlargs.add_argument("-p", "--password", dest="password", help=lang["SettingsMYSQLPasswordHelp"], default="")
     mysqlargs.add_argument("-n", "--db", dest="db", help=lang["SettingsMYSQLDBHelp"], default="bm58")
@@ -163,12 +166,16 @@ def main():
     cur = None
     if args.format == "mysql":
         try:
-            db = MySQLdb.connect(host=args.host, user=args.user, passwd=args.password, db=args.db)
+            db = mysql.connector.connect(
+                host=args.host, port=args.port, user=args.user, passwd=args.password, db=args.db
+            )
             try:
                 cur = db.cursor()
-            except:
+            except Exception as e:
+                print(e)
                 cur = None
-        except:
+        except mysql.connector.errors.DatabaseError as e:
+            print(e)
             db = None
 
         if db is not None and cur is not None:
@@ -184,8 +191,8 @@ def main():
                     ")"
                 )
                 db.commit()
-            except:
-                print()
+            except Exception as e:
+                print(e)
 
     # Request records
     for i in range(1, records + 1):
@@ -262,7 +269,8 @@ def main():
                         if cur is not None:
                             cur.execute(line)
                         db.commit()
-                except:
+                except Exception as e:
+                    print(e)
                     print(lang["ErrorMYSQLInsert"] % args.db)
 
         elif (len(response) == 1) & (response[0] == 0xA9):
