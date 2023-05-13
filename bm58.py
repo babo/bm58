@@ -19,6 +19,7 @@
 
 import argparse
 import locale
+import sys
 
 import serial
 import MySQLdb
@@ -133,24 +134,24 @@ def main():
         )
     except:
         print(lang["ErrorPort"] % args.device)
-        exit(1)
+        sys.exit(1)
 
     # Send "Attention"
-    serialport.write(chr(0xAA))
+    serialport.write(0xAA)
     response = serialport.read(1)
     if ord(response) != 0x55:
         print(lang["ErrorNoRespond"])
-        exit(2)
+        sys.exit(2)
 
     # Request Device ID
-    serialport.write(chr(0xA4))
+    serialport.write(0xA4)
     response = serialport.read(128)
     print(lang["DeviceName"] % response)
 
     print(lang["SelectedMemory"] % args.memory)
 
     # Request number of records
-    serialport.write(chr(0xA2))
+    serialport.write(0xA2)
     response = serialport.read(1)
     records = ord(response)
     print(lang["AvailableRecords"] % records)
@@ -188,9 +189,9 @@ def main():
 
     # Request records
     for i in range(1, records + 1):
-        serialport.write(chr(0xA3) + chr(i))
+        serialport.write([0xA3, i])
         response = serialport.read(9)
-        if (len(response) == 9) & (response[0] == chr(0xAC)):
+        if (len(response) == 9) & (response[0] == 0xAC):
             if args.format == "plain":
                 print(
                     "%2d - %2002d-%02d-%02d %02d:%02d S=%3d  D=%3d  P=%d"
@@ -264,7 +265,7 @@ def main():
                 except:
                     print(lang["ErrorMYSQLInsert"] % args.db)
 
-        elif (len(response) == 1) & (response[0] == chr(0xA9)):
+        elif (len(response) == 1) & (response[0] == 0xA9):
             print("  " + lang["WarningNoRecord"])
         else:
             print("  " + lang["ErrorNoData"] % len(response))
