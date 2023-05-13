@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Script Name: bm58.py
 # Type:        Python Script
-# Version:     1.0.0017
+# Version:     1.1.0
 # Created:     2016-04-26
 # Description: Reads data from Beurer BM-58 blood pressure meter
 # Author:      Norbert Richter <norbert.richter@p-r-solution.de>
@@ -17,8 +17,9 @@
 # Example:
 #   ./bm58.py --device /dev/ttyUSB0 --memory 1 --format mysql --host localhost --db bm58 --table data --user bm58 --password password
 
+import argparse
+import locale
 
-import sys
 import serial
 import MySQLdb
 
@@ -85,10 +86,7 @@ text_dic = {
 }
 
 
-if __name__ == "__main__":
-    import argparse
-    import locale
-
+def main():
     try:
         lang = text_dic[locale.getdefaultlocale()[0]]
     except:
@@ -273,3 +271,7 @@ if __name__ == "__main__":
 
     if db is not None:
         db.close()
+
+
+if __name__ == "__main__":
+    main()
