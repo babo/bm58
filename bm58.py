@@ -89,8 +89,8 @@ text_dic = {
 
 def main():
     try:
-        lang = text_dic[locale.getdefaultlocale()[0]]
-    except:
+        lang = text_dic[locale.getlocale()[0]]
+    except KeyError:
         lang = text_dic["en_EN"]
 
     parser = argparse.ArgumentParser(add_help=True, description=lang["Description"], epilog=lang["Epilog"])
