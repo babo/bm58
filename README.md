@@ -4,14 +4,10 @@ This is a small python script which reads data from 'Beurer BM-58' blood pressur
 ## Installation
 * Copy repository using git:
 ```
-git clone https://github.com/curzon01/bm58
-```
-* Make it executable:
-```
-chmod +x bm58/bm58.py
+git clone https://github.com/babo/bm58
 ```
 ## Usage
 For help start the script with parameter -h
 ```
-bm58/bm58.py -h
+./bm58.py -h
 ```
