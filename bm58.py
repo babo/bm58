@@ -27,9 +27,9 @@ import MySQLdb
 # Internationalize
 text_dic = {
     "en_EN": {
-        "Description": "Read data from 'Beurer BM-58' blood pressure meter as text, csv or into MySQL db (v1.0.0017)",
+        "Description": "Read data from 'Beurer BM-58' blood pressure meter as text, csv or into MySQL db",
         "Epilog": "PR Solution - Norbert Richter <norbert.richter@p-r-solution.de>",
-        "SettingsGroupBM58": "BM-85 settings",
+        "SettingsGroupBM58": "BM-58 settings",
         "SettingsDeviceHelp": "Use the specific device for communication",
         "SettingsMemoryHelp": "Memory place",
         "SettingsGroupFormat": "Output settings",
@@ -48,17 +48,17 @@ text_dic = {
         "DeviceName": "Device name: %s",
         "AvailableRecords": "Available records: %d",
         "CSVHeading": "Memory;Date;Systole;Diastole;Pulse",
-        "Systole": "Systole",
-        "Diastole": "Diasole",
+        "Systole": "Systolic",
+        "Diastole": "Diastolic",
         "Pulse": "Pulse",
         "WarningNoRecord": "WARNING: not available",
         "ErrorMYSQLInsert": "ERROR: Could not insert data into database '%s'",
         "ErrorNoData": "ERROR: Only %d bytes received, 1 or 9 expected",
     },
     "de_DE": {
-        "Description": "Daten des Beurer BM-58 Blutdruckmessgerätes auslesen (v1.0.0017)",
+        "Description": "Daten des Beurer BM-58 Blutdruckmessgerätes auslesen",
         "Epilog": "PR Solution - Norbert Richter <norbert.richter@p-r-solution.de>",
-        "SettingsGroupBM58": "BM-85 Parameter",
+        "SettingsGroupBM58": "BM-58 Parameter",
         "SettingsDeviceHelp": "BM-58 Kommunikationsschnittstelle",
         "SettingsMemoryHelp": "Speicherplatz",
         "SettingsGroupFormat": "Ausgabeparameter",
