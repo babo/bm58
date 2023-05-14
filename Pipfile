@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pyserial = "*"
+mysql-connector-python = "*"
+
+[dev-packages]
+black = {extras = ["jupyter"], version = "*"}
+jupyter = "*"
+pylint = "*"
+
+[requires]
+python_version = "3.11"
