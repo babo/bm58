@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Read measurements from Beuer BM-58 blood pressure monitor and save results to sqlite
+# Read measurements from Beurer BM-58 blood pressure monitor and save results to sqlite
 #
 import argparse
 import datetime
@@ -24,7 +24,8 @@ def save_measurements(measurements, dbname):
             "CREATE TABLE IF NOT EXISTS bp (ts PRIMARY KEY, sys NOT NULL, dia NOT NULL, pulse NOT NULL);"
         )
         if all_in:
-            cur = cur.executemany("INSERT OR IGNORE INTO bp VALUES(?, ?, ?, ?)", all_in)
+            cur = cur.executemany(
+                "INSERT OR IGNORE INTO bp VALUES(?, ?, ?, ?)", all_in)
             db.commit()
 
         cur = cur.execute("SELECT COUNT(*) FROM bp;")
@@ -83,8 +84,10 @@ def display(measurements):
 def get_args():
     desc = """Beurer BM-58 blood pressure readings to sqlite"""
     parser = argparse.ArgumentParser(add_help=True, description=desc)
-    parser.add_argument("-p", "--port", dest="port", help="USB device name", default="/dev/cu.usbserial-1140")
-    parser.add_argument("-d", "--db", dest="dbname", help="Sqlite3 database name", default="bm58.sqlite")
+    parser.add_argument("-p", "--port", dest="port",
+                        help="USB device name", default="/dev/cu.usbserial-1140")
+    parser.add_argument("-d", "--db", dest="dbname",
+                        help="Sqlite3 database name", default="bm58.sqlite")
     return parser.parse_args()
 
 
