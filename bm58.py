@@ -13,6 +13,7 @@
 # Changes:
 # Version      Date         Author     Modification
 # ------------ ------------ ---------- ----------------------------------------
+# 1.1.0         2023.05.14. Attila Babo Update to python3
 #
 # Example:
 #   ./bm58.py --device /dev/ttyUSB0 --memory 1 --format mysql --host localhost --db bm58 --table data --user bm58 --password password
