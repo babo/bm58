@@ -136,26 +136,25 @@ def main():
             timeout=0.5,
         )
     except serial.serialutil.SerialException as e:
-        print(e)
         print(lang["ErrorPort"] % args.device)
         sys.exit(1)
 
     # Send "Attention"
-    serialport.write(0xAA)
-    response = serialport.read(1)
-    if ord(response) != 0x55:
+    serialport.write([0xAA])
+    response = serialport.read(size=1)
+    if response != b"\x55":
         print(lang["ErrorNoRespond"])
         sys.exit(2)
 
     # Request Device ID
-    serialport.write(0xA4)
-    response = serialport.read(128)
+    serialport.write([0xA4])
+    response = serialport.readline().decode("utf-8")
     print(lang["DeviceName"] % response)
 
     print(lang["SelectedMemory"] % args.memory)
 
     # Request number of records
-    serialport.write(0xA2)
+    serialport.write([0xA2])
     response = serialport.read(1)
     records = ord(response)
     print(lang["AvailableRecords"] % records)
@@ -202,66 +201,66 @@ def main():
         if (len(response) == 9) & (response[0] == 0xAC):
             if args.format == "plain":
                 print(
-                    "%2d - %2002d-%02d-%02d %02d:%02d S=%3d  D=%3d  P=%d"
+                    "%2d - %4d-%02d-%02d %02d:%02d S=%3d  D=%3d  P=%d"
                     % (
                         i,
-                        ord(response[8]),
-                        ord(response[4]),
-                        ord(response[5]),
-                        ord(response[6]),
-                        ord(response[7]),
-                        ord(response[1]) + 25,
-                        ord(response[2]) + 25,
-                        ord(response[3]),
+                        response[8] + 2000,
+                        response[4],
+                        response[5],
+                        response[6],
+                        response[7],
+                        response[1] + 25,
+                        response[2] + 25,
+                        response[3],
                     )
                 )
             if args.format == "print":
                 print(
-                    "%2d - %2002d-%02d-%02d %02d:%02d: %s %3d  %s %3d  %s %d"
+                    "%2d - %4d-%02d-%02d %02d:%02d: %s %3d  %s %3d  %s %d"
                     % (
                         i,
-                        ord(response[8]),
-                        ord(response[4]),
-                        ord(response[5]),
-                        ord(response[6]),
-                        ord(response[7]),
+                        response[8] + 2000,
+                        response[4],
+                        response[5],
+                        response[6],
+                        response[7],
                         lang["Systole"],
-                        ord(response[1]) + 25,
+                        response[1] + 25,
                         lang["Diastole"],
-                        ord(response[2]) + 25,
+                        response[2] + 25,
                         lang["Pulse"],
-                        ord(response[3]),
+                        response[3],
                     )
                 )
             if args.format == "csv":
                 print(
-                    "%2d;%2002d-%02d-%02d %02d:%02d;%d;%d;%d"
+                    "%2d;%4d-%02d-%02d %02d:%02d;%d;%d;%d"
                     % (
                         i,
-                        ord(response[8]),
-                        ord(response[4]),
-                        ord(response[5]),
-                        ord(response[6]),
-                        ord(response[7]),
-                        ord(response[1]) + 25,
-                        ord(response[2]) + 25,
-                        ord(response[3]),
+                        response[8] + 2000,
+                        response[4],
+                        response[5],
+                        response[6],
+                        response[7],
+                        response[1] + 25,
+                        response[2] + 25,
+                        response[3],
                     )
                 )
             if args.format == "mysql":
                 line = (
-                    "INSERT IGNORE INTO `%s` SET memory='%d', ts='20%02d-%02d-%02d %02d:%02d', systole=%d, diastole=%d, pulse=%d"
+                    "INSERT IGNORE INTO `%s` SET memory='%d', ts='%4d-%02d-%02d %02d:%02d', systole=%d, diastole=%d, pulse=%d"
                     % (
                         args.table,
                         args.memory,
-                        ord(response[8]),
-                        ord(response[4]),
-                        ord(response[5]),
-                        ord(response[6]),
-                        ord(response[7]),
-                        ord(response[1]) + 25,
-                        ord(response[2]) + 25,
-                        ord(response[3]),
+                        response[8] + 2000,
+                        response[4],
+                        response[5],
+                        response[6],
+                        response[7],
+                        response[1] + 25,
+                        response[2] + 25,
+                        response[3],
                     )
                 )
                 print(line + ";")
@@ -270,7 +269,7 @@ def main():
                         if cur is not None:
                             cur.execute(line)
                         db.commit()
-                except Exception as e:
+                except mysql.connector.errors.DatabaseError as e:
                     print(e)
                     print(lang["ErrorMYSQLInsert"] % args.db)
 
