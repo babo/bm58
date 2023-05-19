@@ -34,11 +34,11 @@ def save_measurements(measurements, dbname):
 
         if count:
             cur = cur.execute(
-                """SELECT AVG(sys), AVG(dia), AVG(pulse) FROM (SELECT sys, dia, pulse FROM bp ORDER BY ts DESC LIMIT 3);"""
+                """SELECT AVG(sys), AVG(dia), AVG(pulse) FROM (SELECT sys, dia, pulse FROM bp ORDER BY ts DESC LIMIT 2);"""
             )
             a = cur.fetchone()
             print(
-                f"Average values from the last 3 measurement\n    Sys: {a[0]:0.1f} Dia: {a[1]:0.1f} Pulse: {a[2]:0.1f}"
+                f"Average values from the last 2 measurement\n    Sys: {a[0]:0.1f} Dia: {a[1]:0.1f} Pulse: {a[2]:0.1f}"
             )
 
 
