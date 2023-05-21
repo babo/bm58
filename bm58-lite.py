@@ -21,7 +21,7 @@ def save_measurements(measurements, dbname):
     with sqlite3.connect(dbname) as db:
         all_in = [convert_reading(m) for m in measurements]
         cur = db.cursor().execute(
-            "CREATE TABLE IF NOT EXISTS bp (ts PRIMARY KEY, sys NOT NULL, dia NOT NULL, pulse NOT NULL);"
+            "CREATE TABLE IF NOT EXISTS bp (ts NOT NULL, sys NOT NULL, dia NOT NULL, pulse NOT NULL, PRIMARY KEY (ts, sys, dia) ON CONFLICT IGNORE);"
         )
         if all_in:
             cur = cur.executemany(
