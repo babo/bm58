@@ -167,9 +167,7 @@ def main():
     cur = None
     if args.format == "mysql":
         try:
-            db = mysql.connector.connect(
-                host=args.host, port=args.port, user=args.user, passwd=args.password, db=args.db
-            )
+            db = mysql.connector.connect(host=args.host, port=args.port, user=args.user, passwd=args.password, db=args.db)
             try:
                 cur = db.cursor()
             except Exception as e:

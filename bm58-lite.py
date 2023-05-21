@@ -24,8 +24,7 @@ def save_measurements(measurements, dbname):
             "CREATE TABLE IF NOT EXISTS bp (ts NOT NULL, sys NOT NULL, dia NOT NULL, pulse NOT NULL, PRIMARY KEY (ts, sys, dia) ON CONFLICT IGNORE);"
         )
         if all_in:
-            cur = cur.executemany(
-                "INSERT OR IGNORE INTO bp VALUES(?, ?, ?, ?)", all_in)
+            cur = cur.executemany("INSERT OR IGNORE INTO bp VALUES(?, ?, ?, ?)", all_in)
             db.commit()
 
         cur = cur.execute("SELECT COUNT(*) FROM bp;")
@@ -33,13 +32,9 @@ def save_measurements(measurements, dbname):
         print(f"Total number of records in the database: {count}")
 
         if count:
-            cur = cur.execute(
-                """SELECT AVG(sys), AVG(dia), AVG(pulse) FROM (SELECT sys, dia, pulse FROM bp ORDER BY ts DESC LIMIT 2);"""
-            )
+            cur = cur.execute("""SELECT AVG(sys), AVG(dia), AVG(pulse) FROM (SELECT sys, dia, pulse FROM bp ORDER BY ts DESC LIMIT 2);""")
             a = cur.fetchone()
-            print(
-                f"Average values from the last 2 measurement\n    Sys: {a[0]:0.1f} Dia: {a[1]:0.1f} Pulse: {a[2]:0.1f}"
-            )
+            print(f"Average values from the last 2 measurement\n    Sys: {a[0]:0.1f} Dia: {a[1]:0.1f} Pulse: {a[2]:0.1f}")
 
 
 def read_measurements(port):
@@ -76,18 +71,14 @@ def display(measurements):
     measurements = list(enumerate(measurements, 1))
     measurements.reverse()
     for i, m in measurements:
-        print(
-            f"{i:2} - 20{m[8]:02}-{m[4]:02}-{m[5]:02} {m[6]:02}:{m[7]:02} Sys={25 + m[1]:3} Dia={25+m[2]:3} Pulse={m[3]}"
-        )
+        print(f"{i:2} - 20{m[8]:02}-{m[4]:02}-{m[5]:02} {m[6]:02}:{m[7]:02} Sys={25 + m[1]:3} Dia={25+m[2]:3} Pulse={m[3]}")
 
 
 def get_args():
     desc = """Beurer BM-58 blood pressure readings to sqlite"""
     parser = argparse.ArgumentParser(add_help=True, description=desc)
-    parser.add_argument("-p", "--port", dest="port",
-                        help="USB device name", default="/dev/cu.usbserial-1140")
-    parser.add_argument("-d", "--db", dest="dbname",
-                        help="Sqlite3 database name", default="bm58.sqlite")
+    parser.add_argument("-p", "--port", dest="port", help="USB device name", default="/dev/cu.usbserial-1140")
+    parser.add_argument("-d", "--db", dest="dbname", help="Sqlite3 database name", default="bm58.sqlite")
     return parser.parse_args()
 
 
